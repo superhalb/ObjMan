@@ -1,8 +1,15 @@
-  <div class="searchbox">
-    <input type="search" name="search" placeholder="Search" />
+<div class="panel panel-primary">
+  <div class="panel-heading text-uppercase" id="searchTitle">Search objects</div>
+  <div class="panel-body">
+    <div class="form-group">
+      <input type="search" name="search" placeholder="Type object name here" class="form-control" />
+    </div>
+    <div class="alert alert-warning hidden" id="noResultAlert">
+      No matching result found.
+    </div>
     <div class="results"></div>
   </div>
-
+</div>
   <script type="application/javascript">
     var ObjMan = ObjMan || {};
     ObjMan.search = function() {
@@ -18,8 +25,14 @@
       // [ private methods ]
       function searchObject( data ) {
           searchResults.html('');
-          if ( data.length == 0 ) return;
-          var result = $('<div class="result"></div>');
+          $("#noResultAlert").removeClass('hidden');
+          if ( data.length == 0 ) {
+            $("#noResultAlert").show();
+            return;
+          } else {
+            $("#noResultAlert").hide();
+          }
+          var result = $('<div class="result btn btn-primary btn-block"></div>');
           for ( i = 0 ; i < data.length ; ++i ) {
               var item = result.clone();
               item.attr('data-id',data[ i ].id);
@@ -33,7 +46,12 @@
         var newSearchString = searchBox.val();
         if ( searchString !== newSearchString ) {
           searchString = newSearchString;
-          $.get("{{ url('/') }}/objects/search/" + searchString , searchObject );
+          if ( searchString == "" ) {
+            searchResults.html('');
+            $("#noResultAlert").show();
+          } else {
+            $.get("{{ url('/') }}/objects/search/" + searchString , searchObject );
+          }
         }
       }
 

@@ -66,6 +66,15 @@ class ObjectController extends Controller
             $objectrelations[] = array( 'id' => $relation->id , 'name' => $related->name );
         }
         $object->relations = $objectrelations;
+
+        $relationsb = Relation::where('to',$id)->get();
+        $objectrelationsb = [];
+        foreach($relationsb as $relation){
+            $related = Object::where('id',$relation->from)->first();
+            $objectrelationsb[] = array( 'id' => $relation->id , 'name' => $related->name );
+        }
+        $object->relationsb = $objectrelationsb;
+
         return response()->json( $object );
     }
 
@@ -86,6 +95,15 @@ class ObjectController extends Controller
             $objectrelations[] = array( 'id' => $relation->id , 'name' => $related->name );
         }
         $object->relations = $objectrelations;
+
+        $relationsb = Relation::where('to',$id)->get();
+        $objectrelationsb = [];
+        foreach($relationsb as $relation){
+            $related = Object::where('id',$relation->from)->first();
+            $objectrelationsb[] = array( 'id' => $relation->id , 'name' => $related->name );
+        }
+        $object->relationsb = $objectrelationsb;
+
         return view('object.edit')->with('object',$object);
     }
 
